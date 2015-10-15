@@ -54,11 +54,12 @@ public class Main {
 			System.out.println("length "+lenght +"  "+temp1 + " f " + temp2);
 		}
 		//countrys[0].print();
-		System.out.println(countrys[0].getMean("CO2 emissions from liquid fuel consumption (kt)"));
-		System.out.println(countrys[0].getMedian("CO2 emissions from liquid fuel consumption (kt)"));
-		double [] modeValues = countrys[0].getMode("CO2 emissions from liquid fuel consumption (kt)");
+		System.out.println(CentralTendency.getMean(countrys[0].getIndicatorValues("CO2 emissions from liquid fuel consumption (kt)")));
+		System.out.println(CentralTendency.getMedian(countrys[0].getIndicatorValues("CO2 emissions from liquid fuel consumption (kt)")));
+		double [] modeValues = CentralTendency.getMode(countrys[0].getIndicatorValues("CO2 emissions from liquid fuel consumption (kt)"));
+		//modeValues are not sorted.
 		for(double value:modeValues){
-			System.out.println(value+" ,");
-		}
+			System.out.print(value+", ");
+		}	
 	}
 }
