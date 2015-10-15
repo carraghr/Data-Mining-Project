@@ -7,8 +7,9 @@ public class Country {
 	LinkedList<String> indicatorNames = new LinkedList<String>();
 	
 	/*
-	 * Linked list in a linked list so that you can have indicator index with 
-	 * */
+	 * Linked list in a linked list so that you can have indicator index with the indicatorNames matched up. 
+	 * Easier for finding values.
+	 */
 	LinkedList<LinkedList<Float>> valuesForEachYear = new LinkedList<LinkedList<Float>>();
 	
 	Country(String name, String countryCode){
@@ -21,7 +22,7 @@ public class Country {
 	
 	void setIndicatorName(String indicatorName){
 		
-		if(!this.indicatorNames.contains(indicatorName)){
+		if(!this.indicatorNames.contains(indicatorName)){//just in case of a bad read.
 			this.indicatorNames.add(indicatorName);
 		}
 	}
@@ -48,12 +49,12 @@ public class Country {
 		
 		int indicatorIndex = this.indicatorNames.indexOf(indicatorName);
 		
-		if(indicatorIndex > -1){
+		if(indicatorIndex > -1){//making sure that the indicator name is in the country
 			
 			Object[] values = this.valuesForEachYear.get(indicatorIndex).toArray();
 			double [] retValues = new double[values.length];
 			for(int i=0;i<retValues.length;i++){
-				retValues[i] = this.valuesForEachYear.get(indicatorIndex).get(i);
+				retValues[i] = this.valuesForEachYear.get(indicatorIndex).get(i); //convert object into doubles.
 			}
 			return retValues;
 		}
