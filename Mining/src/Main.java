@@ -6,7 +6,7 @@ public class Main {
 
 	public static void main(String [] args){
 		
-		String [] selectedCountrys = new String [] {"Finland"};//,"Germany","Ireland","Poland","United States"};
+		String [] selectedCountrys = new String [] {"Finland","Germany","Ireland","Poland","United States"};
 		
 		Country [] countrys = new Country [selectedCountrys.length];
 
@@ -26,7 +26,7 @@ public class Main {
 			
 			while ((row = br.readLine()) != null && countryCount<countrys.length) {//read in row and make sure we are reading anything we don't need.
 
-				String[] values = row.split(",");
+				String[] values = row.split(",");//for this line we should add in blank values so that we can index to were values are based on there year
 				
 				final int STARTOFYEARS = 3;//index of csv that the values for a year start
 				
@@ -57,7 +57,7 @@ public class Main {
 			System.out.println("length "+lenght +"  "+temp1 + " f " + temp2);
 		}
 		
-		//countrys[0].print();
+
 		System.out.println(CentralTendency.getMean(countrys[0].getIndicatorValues("CO2 emissions from liquid fuel consumption (kt)")));
 		System.out.println(CentralTendency.getMedianOfCountryIndicator(countrys[0].getIndicatorValues("CO2 emissions from liquid fuel consumption (kt)")));
 		double [] modeValues = CentralTendency.getMode(countrys[0].getIndicatorValues("CO2 emissions from liquid fuel consumption (kt)"));
@@ -65,5 +65,30 @@ public class Main {
 		for(double value:modeValues){
 			System.out.print(value+", ");
 		}	
+	}
+	
+	static String fillMissingValues(String row){
+		String newRow = "";
+		for(int i=0; i > -1; i = row.indexOf(",", i)){//loop till no more , in string
+			/*
+			 * need a way of getting the next comma and seen if there is any char in between them.
+			 * if the very first value is missing the second col becomes the first so no need to have a may to deal with this.
+			 * if the last value is missing then the row ends at the last actual value accord so no case for this needed here.
+			 */
+			int nextComma = row.indexOf(",",i);
+			if(nextComma - i == 1){//if the index of the next , is one grater then i currently then they are next to each other and a value is missing.
+				
+				newRow+="unknown,";
+			}
+			else{//else there is a comma and you just need to add the value to the new row
+				if(nextComma == -1){//last value so just add it.
+					newRow+=row.substring(nextComma);
+				}
+				else{//its still in the middle.
+					newRow+=row.substring(i, nextComma);
+				}
+			}
+		}
+		return newRow;
 	}
 }

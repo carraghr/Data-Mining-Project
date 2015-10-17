@@ -6,31 +6,6 @@ public class CentralTendency {
 		double sum = countOfValues(indicatorValues); // add all values together
 		return sum / ((double) indicatorValues.length); //cast double so that return is of type double since all values are double numbers
 	}
-
-	public static double [] sortArrayOfDoubles(double [] indicatorValues){
-		
-		double [] sortedArray = new double [indicatorValues.length];//create new array of the same size as the one been taken in
-
-		System.arraycopy( indicatorValues, 0, sortedArray, 0, indicatorValues.length );//copy values over to new array.
-		
-		for(int i=0; i < sortedArray.length; i++){//Selection sort below
-			
-			int smallestValue = i; // stores the index of the lowest value.
-			
-			for(int j = i+1; j < sortedArray.length; j++){
-				if(sortedArray[smallestValue] > sortedArray[j]){
-					smallestValue = j;
-				}
-			}
-			
-			//swap values
-			double temp = sortedArray[i]; //was smallest
-			sortedArray[i] = sortedArray[smallestValue];
-			sortedArray[smallestValue] = temp;
-			
-		}
-		return sortedArray;
-	}
 	
 	public static double getMedianOfCountryIndicator(double [] indicatorValues){//get the median value of a countrys indicator ie from 1990 - 2000 what is the median value.
 
@@ -45,12 +20,45 @@ public class CentralTendency {
 		}
 	}
 	
-	public static double countOfValues(double[] indicatorValues) {//just adds up all values in a double array.
-		double sum = 0.0;
-		for(double value:indicatorValues){
-			sum+=value;
+	public static double getMedianofWorldIndicator(double[] rangeStarts, double [] rangeEnds, double [] allValuesforIndicator){
+		
+		//with a given range from x-y y-z group all values into accurances with in the ranges.
+		HashMap<Float,Integer> rangeValuesOccernaces  = range(rangeStarts,rangeEnds,allValuesforIndicator);
+		
+		int sumOfOccurrences=countOfOccurrences(rangeValuesOccernaces);
+		
+		double middleValue = sumOfOccurrences/2.0;//double as for x/2 could be odd and rounding to make int will be less accurate 
+		
+		//get the ranges keys for access into map.
+		Object [] keyObjects = rangeValuesOccernaces.keySet().toArray();
+		Float[] rangeKeys = new  Float[keyObjects.length];
+		for(int i=0; i<keyObjects.length; i++){
+			rangeKeys[i] = (Float) keyObjects[i];//casting again
 		}
-		return sum;
+		
+		
+		int subtotals = 0;//stores additon of all occurance from start to where the middleValue is in the range of.
+		Float startOfRange = new Float(0);//start of the range that middle is in
+		Float endOfRange = new Float(0);//end of the range that middle is in.
+		
+		for(int i=0; i < rangeKeys.length; i++){//loop to fine values for the above varaibles. 
+			
+			subtotals += rangeValuesOccernaces.get(rangeKeys[i]);//add occurrences together
+			
+			if(i+1 <= rangeKeys.length){//make sure not to go out of bound 
+				int endOfrangeAdded = subtotals + rangeValuesOccernaces.get(rangeKeys[i]);//get the value of the end of the range
+				if(middleValue >= subtotals && middleValue < endOfrangeAdded){// so basically if the middle value is between the total occurances at the start/end of the range.
+					startOfRange = rangeKeys[i];//store start of range.
+					endOfRange = rangeKeys[i+1];//store end of range.
+					break;//break out of loop as no longer needed.
+				}
+			}
+			
+		}
+		
+		//filling out the formula for the median and return result.
+		
+		return startOfRange * ((middleValue - subtotals) / rangeValuesOccernaces.get(startOfRange)) * (endOfRange - startOfRange);
 	}
 	
 	public static double [] getMode(double [] indicatorValues){//get mode.
@@ -107,47 +115,38 @@ public class CentralTendency {
 		
 		return new double[0];
 	}
-	
-	
-	public static double getMedianofWorldIndicator(double[] rangeStarts, double [] rangeEnds, double [] allValuesforIndicator){
+
+	public static double [] sortArrayOfDoubles(double [] indicatorValues){
 		
-		//with a given range from x-y y-z group all values into accurances with in the ranges.
-		HashMap<Float,Integer> rangeValuesOccernaces  = range(rangeStarts,rangeEnds,allValuesforIndicator);
+		double [] sortedArray = new double [indicatorValues.length];//create new array of the same size as the one been taken in
+
+		System.arraycopy( indicatorValues, 0, sortedArray, 0, indicatorValues.length );//copy values over to new array.
 		
-		int sumOfOccurrences=countOfOccurrences(rangeValuesOccernaces);
-		
-		double middleValue = sumOfOccurrences/2.0;//double as for x/2 could be odd and rounding to make int will be less accurate 
-		
-		//get the ranges keys for access into map.
-		Object [] keyObjects = rangeValuesOccernaces.keySet().toArray();
-		Float[] rangeKeys = new  Float[keyObjects.length];
-		for(int i=0; i<keyObjects.length; i++){
-			rangeKeys[i] = (Float) keyObjects[i];//casting again
-		}
-		
-		
-		int subtotals = 0;//stores additon of all occurance from start to where the middleValue is in the range of.
-		Float startOfRange = new Float(0);//start of the range that middle is in
-		Float endOfRange = new Float(0);//end of the range that middle is in.
-		
-		for(int i=0; i < rangeKeys.length; i++){
+		for(int i=0; i < sortedArray.length; i++){//Selection sort below
 			
-			subtotals += rangeValuesOccernaces.get(rangeKeys[i]);//add occurrences together
+			int smallestValue = i; // stores the index of the lowest value.
 			
-			if(i+1 <= rangeKeys.length){//make sure not to go out of bound 
-				int endOfrangeAdded = subtotals + rangeValuesOccernaces.get(rangeKeys[i]);//get the value of the end of the range
-				if(middleValue >= subtotals && middleValue < endOfrangeAdded){// so basically if the middle value is between the total occurances at the start/end of the range.
-					startOfRange = rangeKeys[i];//store start of range.
-					endOfRange = rangeKeys[i+1];//store end of range.
-					break;//break out of loop as no longer needed.
+			for(int j = i+1; j < sortedArray.length; j++){
+				if(sortedArray[smallestValue] > sortedArray[j]){
+					smallestValue = j;
 				}
 			}
 			
+			//swap values
+			double temp = sortedArray[i]; //was smallest
+			sortedArray[i] = sortedArray[smallestValue];
+			sortedArray[smallestValue] = temp;
+			
 		}
-		
-		//filling out the formula for the median and return result.
-		
-		return startOfRange * ((middleValue - subtotals) / rangeValuesOccernaces.get(startOfRange)) * (endOfRange - startOfRange);
+		return sortedArray;
+	}
+	
+	public static double countOfValues(double[] indicatorValues) {//just adds up all values in a double array.
+		double sum = 0.0;
+		for(double value:indicatorValues){
+			sum+=value;
+		}
+		return sum;
 	}
 	
 	private static int countOfOccurrences(HashMap<Float,Integer> values){//gets the occurrences added together.
