@@ -326,4 +326,129 @@ public class CentralTendency {
 		System.out.println("Median for " +indicator+ " for " +region+ " is: "  + getMedianofWorldIndicator(rangeStarts, rangeEnds, allValuesforIndicator));
 		
 	}
+
+	public static void modeOfWorld(Country[] countrys,String indicator){
+		
+		
+		HashMap<Float,Integer> countOfOccurrence = new HashMap<Float,Integer>();//float is for double values. integer for the times the double(Float) comes up.	
+		
+		for(int i=0; i<216;i++){//loop through each country add apply occurrence into the HashMap
+			double [] valuesForIndictor = countrys[i].getIndicatorValues(indicator);
+			for(int j = 0; j < valuesForIndictor.length; j++){
+				double value = valuesForIndictor[j];
+				if(countOfOccurrence.containsKey(value)){//value already occurred so add one to the total.
+					countOfOccurrence.put((float) value, countOfOccurrence.get(value) + 1);//cast to float so you can add it as a Float, doesn't auto cast double to Float
+				}
+				else{//new value occurred so add it to the map with on value.
+					countOfOccurrence.put((float) value, 1);//same reason as above. 
+				}
+			}
+		}
+		
+		//get the value(s) of the most occurring 
+		double [] mostOccuring = new double [countOfOccurrence.size()];
+		
+		//populate an float array with all keys for better access.
+		Object[] keyObjects = countOfOccurrence.keySet().toArray();//from map to set to array
+		Float[] keys = new  Float[keyObjects.length];//convert object array into float array for use ability 
+		for(int i=0; i<keyObjects.length; i++){
+			keys[i] = (Float) keyObjects[i];
+		}
+		
+		if(keys.length > 0){//better safe then sorry (can't remember why I though this was a good idea) 
+			
+			mostOccuring[0] = keys[0];//keep track of values that are the most occurring 
+			double min = countOfOccurrence.get(keys[0]);// set the min of the most occurring to the first value.
+			int valuesOfSameOccurance = 0;//keep track of indexing and how many values occured at the same rate.
+			
+			for(int i=1;i<keys.length;i++){//
+				
+				if(countOfOccurrence.get(keys[i]) > min){
+					min = countOfOccurrence.get(keys[i]);//reset min to now highest recurring value
+					mostOccuring = new double [keys.length - i]; //create a new array
+					valuesOfSameOccurance = 0;//reset place of index keeping track of values that accrue at the same rate
+					mostOccuring[valuesOfSameOccurance] = keys[i]; //add new highest occurrence
+				}
+				else if(countOfOccurrence.get(keys[i]) == min){//if the value of the next value that occurred has the same as the last value of occurrence then add it to array
+					valuesOfSameOccurance++;
+					mostOccuring[valuesOfSameOccurance] = keys[i]; 
+				}
+				
+			}
+			double [] retArray = new double [valuesOfSameOccurance + 1];//create new array to told nothing but the highest occurring values.
+			System.arraycopy( mostOccuring, 0, retArray, 0, valuesOfSameOccurance + 1 );//get rid of empty space and values that aren't highest occurring
+			
+			System.out.println("The mode of " + indicator +" for the world is: ");
+			for(double value:retArray){
+				System.out.print(value + ",");
+			}
+			
+		}
+		else{
+			System.out.println("Error with finding mode");
+		}
+	}
+
+	public static void modeOfRegion(Country[] countrys,String indicator, String region){
+		
+		HashMap<Float,Integer> countOfOccurrence = new HashMap<Float,Integer>();//float is for double values. integer for the times the double(Float) comes up.	
+		
+		for(int i=0; i<216;i++){//loop through each country add apply occurrence into the HashMap
+			if(countrys[i].isInRegion(region)){
+				double [] valuesForIndictor = countrys[i].getIndicatorValues(indicator);
+				for(int j = 0; j < valuesForIndictor.length; j++){
+					double value = valuesForIndictor[j];
+					if(countOfOccurrence.containsKey(value)){//value already occurred so add one to the total.
+						countOfOccurrence.put((float) value, countOfOccurrence.get(value) + 1);//cast to float so you can add it as a Float, doesn't auto cast double to Float
+					}
+					else{//new value occurred so add it to the map with on value.
+						countOfOccurrence.put((float) value, 1);//same reason as above. 
+					}
+				}
+			}
+		}
+		
+		//get the value(s) of the most occurring 
+		double [] mostOccuring = new double [countOfOccurrence.size()];
+		
+		//populate an float array with all keys for better access.
+		Object[] keyObjects = countOfOccurrence.keySet().toArray();//from map to set to array
+		Float[] keys = new  Float[keyObjects.length];//convert object array into float array for use ability 
+		for(int i=0; i<keyObjects.length; i++){
+			keys[i] = (Float) keyObjects[i];
+		}
+		
+		if(keys.length > 0){//better safe then sorry (can't remember why I though this was a good idea) 
+			
+			mostOccuring[0] = keys[0];//keep track of values that are the most occurring 
+			double min = countOfOccurrence.get(keys[0]);// set the min of the most occurring to the first value.
+			int valuesOfSameOccurance = 0;//keep track of indexing and how many values occured at the same rate.
+			
+			for(int i=1;i<keys.length;i++){//
+				
+				if(countOfOccurrence.get(keys[i]) > min){
+					min = countOfOccurrence.get(keys[i]);//reset min to now highest recurring value
+					mostOccuring = new double [keys.length - i]; //create a new array
+					valuesOfSameOccurance = 0;//reset place of index keeping track of values that accrue at the same rate
+					mostOccuring[valuesOfSameOccurance] = keys[i]; //add new highest occurrence
+				}
+				else if(countOfOccurrence.get(keys[i]) == min){//if the value of the next value that occurred has the same as the last value of occurrence then add it to array
+					valuesOfSameOccurance++;
+					mostOccuring[valuesOfSameOccurance] = keys[i]; 
+				}
+				
+			}
+			double [] retArray = new double [valuesOfSameOccurance + 1];//create new array to told nothing but the highest occurring values.
+			System.arraycopy( mostOccuring, 0, retArray, 0, valuesOfSameOccurance + 1 );//get rid of empty space and values that aren't highest occurring
+			
+			System.out.println("The mode of " + indicator +" for the world is: ");
+			for(double value:retArray){
+				System.out.print(value + ",");
+			}
+			
+		}
+		else{
+			System.out.println("Error with finding mode");
+		}
+	}
 }

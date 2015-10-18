@@ -69,14 +69,15 @@ public class WorkShop1 {
 				/*
 				 * Do some maths down here after file has been processed.
 				 */
+				
+				
 				//System.out.println(countrys[countryTracker.indexOf("Ireland")].isInRegion(""));
 				
 				CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population  total");
 				CentralTendency.medianOfIndicatorForWorld(countrys,"Population  total",5000);
 				CentralTendency.medianOfIndicatorForRegion(countrys,"Population  total",5000,"Europe & Central Asia");
+				CentralTendency.modeOfRegion(countrys,"Population  total","Europe & Central Asia");
 				
-				
-				//countrys[countryTracker.indexOf("Ireland")].print();
 				
 			}catch(FileNotFoundException  e){
 				System.out.println("File not found: " + args[0]);
