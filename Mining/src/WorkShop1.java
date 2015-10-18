@@ -92,7 +92,7 @@ public class WorkShop1 {
 		/*
 		 * Get the mean of all for a given indicator for world and region.
 		 */
-		
+		//
 		double worldTotal = 0.0;
 		HashMap <String,Float> regionalTotal = new HashMap<>();
 		for(int i=0; i < countryTracker.size();i++){

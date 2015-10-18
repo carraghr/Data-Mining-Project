@@ -6,7 +6,7 @@ public class CentralTendency {
 		double sum = countOfValues(indicatorValues); // add all values together
 		return sum / ((double) indicatorValues.length); //cast double so that return is of type double since all values are double numbers
 	}
-	
+	//
 	public static double getMedianOfCountryIndicator(double [] indicatorValues){//get the median value of a countrys indicator ie from 1990 - 2000 what is the median value.
 
 		indicatorValues = sortArrayOfDoubles(indicatorValues);
