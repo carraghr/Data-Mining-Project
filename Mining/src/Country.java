@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 public class Country {
 	
-	String name, countryCode;
+	String name, region;
 	
 	LinkedList<String> indicatorNames = new LinkedList<String>();
 	
@@ -12,10 +12,10 @@ public class Country {
 	 */
 	LinkedList<LinkedList<Float>> valuesForEachYear = new LinkedList<LinkedList<Float>>();
 	
-	Country(String name, String countryCode){
+	Country(String name, String region){
 		
 		this.name=name;
-		this.countryCode=countryCode;
+		this.region=region;
 	}
 	
 	Country(){}
@@ -28,15 +28,16 @@ public class Country {
 	}
 	
 	boolean setValuesForYears(String indicator, String [] values){
-		
+		//
 		int index = this.indicatorNames.indexOf(indicator);
 		this.valuesForEachYear.add(new LinkedList<Float>());
 		if( index > -1){
 			for(String value:values){
-				if(!value.isEmpty())
-					this.valuesForEachYear.get(index).add(Float.parseFloat(value));
-				else{
+				if(value.equals("0unknown")||value.equals("unknown")||value.isEmpty()){	
 					this.valuesForEachYear.get(index).add(0.0f);
+				}
+				else{
+					this.valuesForEachYear.get(index).add(Float.parseFloat(value));
 				}
 			}
 			return true;
@@ -62,6 +63,15 @@ public class Country {
 		return v;
 	}
 	
+	boolean isInRegion(String region){
+		return this.region.equals(region);
+	}
+	
+	double getIndicatorValuesFromRegionForYear(String indicatorName,int year){
+		double []  ret = getIndicatorValues(indicatorName);
+		return ret[year];
+	}
+	
 	void print(){
 		System.out.println(this.name);
 		for(String value:indicatorNames){
@@ -72,5 +82,9 @@ public class Country {
 			}
 			System.out.println();
 		}
+	}
+	
+	public String getRegion(){
+		return this.region;
 	}
 }	
