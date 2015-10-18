@@ -33,7 +33,7 @@ public class Country {
 		this.valuesForEachYear.add(new LinkedList<Float>());
 		if( index > -1){
 			for(String value:values){
-				if(value.equals("unknown")||value.isEmpty()){	
+				if(value.equals("0unknown")||value.equals("unknown")||value.isEmpty()){	
 					this.valuesForEachYear.get(index).add(0.0f);
 				}
 				else{
@@ -82,5 +82,9 @@ public class Country {
 			}
 			System.out.println();
 		}
+	}
+	
+	public String getRegion(){
+		return this.region;
 	}
 }	

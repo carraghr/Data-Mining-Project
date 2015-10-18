@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class WorkShop1 {
 
@@ -34,8 +35,10 @@ public class WorkShop1 {
 				readFile = new BufferedReader(new FileReader(args[0]));
 				
 				while((row = readFile.readLine()) != null ){
+					//System.out.println(row);
 					row = fillMissingValues(row);
 					String [] attriutes = row.split(",");
+					//System.out.println(row);
 					
 					if(selectedRegions.contains(attriutes[region])){//if the list of regions contains the region of the new line add it. Skips unknown/ grouped countrys
 				
@@ -48,7 +51,9 @@ public class WorkShop1 {
 						
 						if(countryTracker.contains(attriutes[countryName])){//country already made just add indicator and values for the years.
 							countrys[countryTracker.indexOf(attriutes[countryName])].setIndicatorName(attriutes[indicatorName]);
-							countrys[countryTracker.indexOf(attriutes[countryName])].setIndicatorName(attriutes[indicatorName]);
+							String [] valuesForYears = new String [10];
+							System.arraycopy( attriutes, 3, valuesForYears, 0, valuesForYears.length );
+							countrys[countryTracker.indexOf(attriutes[countryName])].setValuesForYears(attriutes[indicatorName], valuesForYears);
 						}
 						else{//need to create country, add it to tracker and add indicator and values.
 							countryTracker.add(attriutes[countryName]);
@@ -64,7 +69,11 @@ public class WorkShop1 {
 				/*
 				 * Do some maths down here after file has been processed.
 				 */
-				System.out.println(countrys[countryTracker.indexOf("Ireland")].isInRegion(""));
+				//System.out.println(countrys[countryTracker.indexOf("Ireland")].isInRegion(""));
+				
+				meanOfIndicator(countrys, countryTracker, regionOccurrence, "CO2 emissions (kt)");
+				//countrys[countryTracker.indexOf("Ireland")].print();
+				
 			}catch(FileNotFoundException  e){
 				System.out.println("File not found: " + args[0]);
 			}catch(IOException e){
@@ -79,6 +88,34 @@ public class WorkShop1 {
 		
 	}
 
+	static void meanOfIndicator(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
+		/*
+		 * Get the mean of all for a given indicator for world and region.
+		 */
+		
+		double worldTotal = 0.0;
+		HashMap <String,Float> regionalTotal = new HashMap<>();
+		for(int i=0; i < countryTracker.size();i++){
+			if(!countrys[i].isInRegion("unknown")){
+				double count = CentralTendency.countOfValues(countrys[i].getIndicatorValues(indicator));
+				worldTotal +=count;
+				
+				if(regionalTotal.containsKey(countrys[i].getRegion())){
+					regionalTotal.put(countrys[i].getRegion(), (float) (regionalTotal.get(countrys[i].getRegion())+count));
+				}else{
+					regionalTotal.put(countrys[i].getRegion(), (float) count);
+				}
+			}
+		}
+		
+		System.out.println("Mean value of "+ indicator +" for the world is: " + (worldTotal/(double) countryTracker.size()));
+		
+		Set<String> keyObjects = regionalTotal.keySet();
+		for(String key:keyObjects){
+			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/(double)regionOccurrence.get(key)));
+		}
+	}
+	
 	static String fillMissingValues(String row){
 		String newRow = "";
 
@@ -88,14 +125,14 @@ public class WorkShop1 {
 			int nextComma = row.indexOf(",",i+1);
 			
 			if(nextComma - i == 1){//if the index of the next , is one grater then i currently then they are next to each other and a value is missing.
-				newRow+="unknown,";
+				newRow+=",unknown";
 			}
 			else{//else there is a comma and you just need to add the value to the new row
-				if(nextComma == -1){//last value so just add it.
-					newRow+=row.substring(i);
+				if(nextComma != -1){//last value so just add it.	
+					newRow+=row.substring(i, nextComma);
 				}
 				else{//its still in the middle.
-					newRow+=row.substring(i, nextComma);
+					newRow+=row.substring(i);
 				}
 			}
 			
