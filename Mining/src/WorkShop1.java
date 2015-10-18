@@ -71,7 +71,11 @@ public class WorkShop1 {
 				 */
 				//System.out.println(countrys[countryTracker.indexOf("Ireland")].isInRegion(""));
 				
-				meanOfIndicator(countrys, countryTracker, regionOccurrence, "CO2 emissions (kt)");
+				CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population  total");
+				CentralTendency.medianOfIndicatorForWorld(countrys,"Population  total",5000);
+				CentralTendency.medianOfIndicatorForRegion(countrys,"Population  total",5000,"Europe & Central Asia");
+				
+				
 				//countrys[countryTracker.indexOf("Ireland")].print();
 				
 			}catch(FileNotFoundException  e){
@@ -88,33 +92,7 @@ public class WorkShop1 {
 		
 	}
 
-	static void meanOfIndicator(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
-		/*
-		 * Get the mean of all for a given indicator for world and region.
-		 */
-		//
-		double worldTotal = 0.0;
-		HashMap <String,Float> regionalTotal = new HashMap<>();
-		for(int i=0; i < countryTracker.size();i++){
-			if(!countrys[i].isInRegion("unknown")){
-				double count = CentralTendency.countOfValues(countrys[i].getIndicatorValues(indicator));
-				worldTotal +=count;
-				
-				if(regionalTotal.containsKey(countrys[i].getRegion())){
-					regionalTotal.put(countrys[i].getRegion(), (float) (regionalTotal.get(countrys[i].getRegion())+count));
-				}else{
-					regionalTotal.put(countrys[i].getRegion(), (float) count);
-				}
-			}
-		}
-		
-		System.out.println("Mean value of "+ indicator +" for the world is: " + (worldTotal/(double) countryTracker.size()));
-		
-		Set<String> keyObjects = regionalTotal.keySet();
-		for(String key:keyObjects){
-			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/(double)regionOccurrence.get(key)));
-		}
-	}
+	
 	
 	static String fillMissingValues(String row){
 		String newRow = "";

@@ -1,10 +1,40 @@
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class CentralTendency {
 	
 	public static double getMean(double [] indicatorValues){
 		double sum = countOfValues(indicatorValues); // add all values together
 		return sum / ((double) indicatorValues.length); //cast double so that return is of type double since all values are double numbers
+	}
+	
+	static void meanOfIndicator(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
+		/*
+		 * Get the mean of all for a given indicator for world and region.
+		 */
+		//
+		double worldTotal = 0.0;
+		HashMap <String,Float> regionalTotal = new HashMap<>();
+		for(int i=0; i < countryTracker.size();i++){
+			if(!countrys[i].isInRegion("unknown")){
+				double count = CentralTendency.countOfValues(countrys[i].getIndicatorValues(indicator));
+				worldTotal +=count;
+				
+				if(regionalTotal.containsKey(countrys[i].getRegion())){
+					regionalTotal.put(countrys[i].getRegion(), (float) (regionalTotal.get(countrys[i].getRegion())+count));
+				}else{
+					regionalTotal.put(countrys[i].getRegion(), (float) count);
+				}
+			}
+		}
+		
+		System.out.println("Mean value of "+ indicator +" for the world is: " + (worldTotal/(double) countryTracker.size()));
+		
+		Set<String> keyObjects = regionalTotal.keySet();
+		for(String key:keyObjects){
+			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/(double)regionOccurrence.get(key)));
+		}
 	}
 	//
 	public static double getMedianOfCountryIndicator(double [] indicatorValues){//get the median value of a countrys indicator ie from 1990 - 2000 what is the median value.
@@ -22,7 +52,7 @@ public class CentralTendency {
 	
 	public static double getMedianofWorldIndicator(double[] rangeStarts, double [] rangeEnds, double [] allValuesforIndicator){
 		
-		//with a given range from x-y y-z group all values into accurances with in the ranges.
+		//with a given range from x-y y-z group all values into occurrences with in the ranges.
 		HashMap<Float,Integer> rangeValuesOccernaces  = range(rangeStarts,rangeEnds,allValuesforIndicator);
 		
 		int sumOfOccurrences=countOfOccurrences(rangeValuesOccernaces);
@@ -171,7 +201,6 @@ public class CentralTendency {
 		
 		for(int i =0; i < rangeStarts.length; i++){
 			
-			
 			Float startOfRange = new Float(rangeStarts[i]);//float for adding to map.
 			rangeValues.put(startOfRange , 0);//place the next range in the map and set it to 0
 			for(int j =0; j < allValuesforIndicator.length; j++ ){//loop through each value and place it in the right range.
@@ -192,5 +221,109 @@ public class CentralTendency {
 		}
 		
 		return rangeValues;
+	}
+
+	public static void medianOfIndicatorForWorld(Country[] countrys,String indicator, double rangeDevider) {
+		
+		double[] rangeStarts;
+		double[] rangeEnds;
+		
+		double[] allValuesforIndicator = new double[countrys.length*10];//length of the number countrys by the number of years for each country
+		double min;//starting value for the range
+		double max;//ending value for the range
+		double [] tempMinMax = countrys[0].getIndicatorValues(indicator);
+		min = tempMinMax[0];
+		max = tempMinMax[0];
+		
+		
+		for(int i=0; i<216;i++){//loop through each country and get the lowest and highest values. And collect all values into one array
+			double [] valuesForIndictor = countrys[i].getIndicatorValues(indicator);
+			 
+			for(int j = 0; j < valuesForIndictor.length; j++){
+				if(valuesForIndictor[j] > max){
+					max = valuesForIndictor[j];
+				}
+				else if(valuesForIndictor[j] < min){
+					min = valuesForIndictor[j];
+				}
+				allValuesforIndicator[(i*10)+j] = valuesForIndictor[j];
+			}
+		}
+		
+	
+		//need to make ranges;
+		double startOfRange = min;
+		int howManyRanges =  (int) (max / rangeDevider);
+		
+		if(max > howManyRanges*rangeDevider){// if the max value is more then the total value of the last range then max is out side of the range with a remainder so add another howManyRanges and you will get it in the last range.
+			howManyRanges++;//there should only be a remainder left so adding another range should solve the problem
+		}
+		
+		rangeStarts = new double[howManyRanges];
+		rangeEnds = new double[howManyRanges];
+		
+		rangeStarts[0] = min;
+		rangeEnds[0] = min + rangeDevider;
+		
+		for(int i=1; i < howManyRanges; i++){
+			rangeStarts[i] = rangeEnds[i-1];
+			rangeEnds[i] = rangeStarts[i] + rangeDevider;
+		}
+		
+		
+		System.out.println("Median for " +indicator+ " for the world is: "  + getMedianofWorldIndicator(rangeStarts, rangeEnds, allValuesforIndicator));
+		
+	}
+	
+	public static void medianOfIndicatorForRegion(Country[] countrys,String indicator, double rangeDevider,String region) {
+		
+		double[] rangeStarts;
+		double[] rangeEnds;
+		
+		double[] allValuesforIndicator = new double[countrys.length*10];//length of the number countrys by the number of years for each country
+		double min;//starting value for the range
+		double max;//ending value for the range
+		double [] tempMinMax = countrys[0].getIndicatorValues(indicator);
+		min = tempMinMax[0];
+		max = tempMinMax[0];
+		
+		
+		for(int i=0; i<216;i++){//loop through each country and get the lowest and highest values. And collect all values into one array
+			double [] valuesForIndictor = countrys[i].getIndicatorValues(indicator);
+			if(countrys[i].isInRegion(region)){
+				for(int j = 0; j < valuesForIndictor.length; j++){
+					if(valuesForIndictor[j] > max){
+						max = valuesForIndictor[j];
+					}
+					else if(valuesForIndictor[j] < min){
+						min = valuesForIndictor[j];
+					}
+					allValuesforIndicator[(i*10)+j] = valuesForIndictor[j];
+				}
+			}
+		}
+		
+	
+		//need to make ranges;
+		double startOfRange = min;
+		int howManyRanges =  (int) (max / rangeDevider);
+		
+		if(max > howManyRanges*rangeDevider){// if the max value is more then the total value of the last range then max is out side of the range with a remainder so add another howManyRanges and you will get it in the last range.
+			howManyRanges++;//there should only be a remainder left so adding another range should solve the problem
+		}
+		
+		rangeStarts = new double[howManyRanges];
+		rangeEnds = new double[howManyRanges];
+		
+		rangeStarts[0] = min;
+		rangeEnds[0] = min + rangeDevider;
+		
+		for(int i=1; i < howManyRanges; i++){
+			rangeStarts[i] = rangeEnds[i-1];
+			rangeEnds[i] = rangeStarts[i] + rangeDevider;
+		}
+	
+		System.out.println("Median for " +indicator+ " for " +region+ " is: "  + getMedianofWorldIndicator(rangeStarts, rangeEnds, allValuesforIndicator));
+		
 	}
 }
