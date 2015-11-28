@@ -35,10 +35,9 @@ public class WorkShop1 {
 				readFile = new BufferedReader(new FileReader(args[0]));
 				
 				while((row = readFile.readLine()) != null ){
-					//System.out.println(row);
-					row = fillMissingValues(row);
-					String [] attriutes = row.split(",");
-					//System.out.println(row);
+					
+					row = fillMissingValues(row); //if a value is missing then I place unknown in the slot. This is for the case were the string has a,b,,d
+					String [] attriutes = row.split(",");//split all values on , 
 					
 					if(selectedRegions.contains(attriutes[region])){//if the list of regions contains the region of the new line add it. Skips unknown/ grouped countrys
 				
@@ -71,9 +70,11 @@ public class WorkShop1 {
 				 */
 				//System.out.println(countrys[countryTracker.indexOf("Ireland")].isInRegion(""));
 				
-				CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population  total");
-				CentralTendency.medianOfIndicatorForWorld(countrys,"Population  total",5000);
-				CentralTendency.medianOfIndicatorForRegion(countrys,"Population  total",5000,"Europe & Central Asia");
+				CentralTendency.meanOfIndicatorForEachCountryInRegion(countrys, countryTracker, regionOccurrence, "Population  total");
+				//CentralTendency.medianOfIndicatorForWorld(countrys,"Population  total",5000);
+				//CentralTendency.medianOfIndicatorForRegion(countrys,"Population  total",5000,"Europe & Central Asia");
+				System.out.println();System.out.println();
+				CentralTendency.meanOfIndicatorForRegion(countrys, countryTracker, regionOccurrence, "Population  total");
 				
 				
 				//countrys[countryTracker.indexOf("Ireland")].print();
@@ -91,8 +92,6 @@ public class WorkShop1 {
 		}
 		
 	}
-
-	
 	
 	static String fillMissingValues(String row){
 		String newRow = "";

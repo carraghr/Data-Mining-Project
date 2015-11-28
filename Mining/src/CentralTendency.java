@@ -4,22 +4,20 @@ import java.util.Set;
 
 public class CentralTendency {
 	
-	public static double getMean(double [] indicatorValues){
+	public static double getMeanOfIndicator(double [] indicatorValues){
 		double sum = countOfValues(indicatorValues); // add all values together
 		return sum / ((double) indicatorValues.length); //cast double so that return is of type double since all values are double numbers
 	}
 	
-	static void meanOfIndicator(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
+	static void meanOfIndicatorForEachCountryInRegion(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
 		/*
-		 * Get the mean of all for a given indicator for world and region.
+		 * Get the mean of all regions
 		 */
-		//
-		double worldTotal = 0.0;
+		
 		HashMap <String,Float> regionalTotal = new HashMap<>();
 		for(int i=0; i < countryTracker.size();i++){
 			if(!countrys[i].isInRegion("unknown")){
 				double count = CentralTendency.countOfValues(countrys[i].getIndicatorValues(indicator));
-				worldTotal +=count;
 				
 				if(regionalTotal.containsKey(countrys[i].getRegion())){
 					regionalTotal.put(countrys[i].getRegion(), (float) (regionalTotal.get(countrys[i].getRegion())+count));
@@ -29,15 +27,43 @@ public class CentralTendency {
 			}
 		}
 		
-		System.out.println("Mean value of "+ indicator +" for the world is: " + (worldTotal/(double) countryTracker.size()));
+		Set<String> keyObjects = regionalTotal.keySet();
+		for(String key:keyObjects){
+			/*
+			 * total at start is the total value for a region for 10 years.
+			 * Divide this by the number of years to get the mean of the region for 10 years.
+			 * for each of these years a country as added to this total to get the average of this addition divide by the number of countries in region
+			 */
+			
+			System.out.println("Mean value of "+ indicator +" for each country in "+ key +" is: " + (regionalTotal.get(key)/(double)regionOccurrence.get(key))/(double)10  );
+		}
+	}
+	
+	static void meanOfIndicatorForRegion(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
+		
+		HashMap <String,Float> regionalTotal = new HashMap<>();
+		for(int i=0; i < countryTracker.size();i++){
+			
+			if(!countrys[i].isInRegion("unknown")){
+				double count = CentralTendency.countOfValues(countrys[i].getIndicatorValues(indicator));//get the value for a country for indicator
+				
+				if(regionalTotal.containsKey(countrys[i].getRegion())){
+					/*Add the value to a regions total*/
+					regionalTotal.put(countrys[i].getRegion(), (float) (regionalTotal.get(countrys[i].getRegion())+count));
+				}else{
+					regionalTotal.put(countrys[i].getRegion(), (float) count);
+				}
+			}
+		}
 		
 		Set<String> keyObjects = regionalTotal.keySet();
 		for(String key:keyObjects){
-			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/(double)regionOccurrence.get(key)));
+			//for the region mean it is the total div by the number of years.
+			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/(double)10));
 		}
 	}
-	//
-	public static double getMedianOfCountryIndicator(double [] indicatorValues){//get the median value of a countrys indicator ie from 1990 - 2000 what is the median value.
+	
+	public static double getMedianOfIndicator(double [] indicatorValues){//get the median value of a countries indicator ie from 1990 - 2000 what is the median value.
 
 		indicatorValues = sortArrayOfDoubles(indicatorValues);
 		int middleSlot = indicatorValues.length / 2;
@@ -67,11 +93,11 @@ public class CentralTendency {
 		}
 		
 		
-		int subtotals = 0;//stores additon of all occurance from start to where the middleValue is in the range of.
+		int subtotals = 0;//stores addition of all occurrence from start to where the middleValue is in the range of.
 		Float startOfRange = new Float(0);//start of the range that middle is in
 		Float endOfRange = new Float(0);//end of the range that middle is in.
 		
-		for(int i=0; i < rangeKeys.length; i++){//loop to fine values for the above varaibles. 
+		for(int i=0; i < rangeKeys.length; i++){//loop to fine values for the above variables. 
 			
 			subtotals += rangeValuesOccernaces.get(rangeKeys[i]);//add occurrences together
 			
@@ -228,7 +254,7 @@ public class CentralTendency {
 		double[] rangeStarts;
 		double[] rangeEnds;
 		
-		double[] allValuesforIndicator = new double[countrys.length*10];//length of the number countrys by the number of years for each country
+		double[] allValuesforIndicator = new double[countrys.length*10];//length of the number countries by the number of years for each country
 		double min;//starting value for the range
 		double max;//ending value for the range
 		double [] tempMinMax = countrys[0].getIndicatorValues(indicator);
