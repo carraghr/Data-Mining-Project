@@ -2,6 +2,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 public class CentralTendency {
 	
 	public static double getMean(double [] indicatorValues){
@@ -10,12 +12,10 @@ public class CentralTendency {
 	}
 	
 	static void meanOfIndicator(Country[] countrys,List<String> countryTracker,HashMap <String, Integer> regionOccurrence,String indicator){
-		/*
-		 * Get the mean of all for a given indicator for world and region.
-		 */
-		//
+		
 		double worldTotal = 0.0;
 		HashMap <String,Float> regionalTotal = new HashMap<>();
+		
 		for(int i=0; i < countryTracker.size();i++){
 			if(!countrys[i].isInRegion("unknown")){
 				double count = CentralTendency.countOfValues(countrys[i].getIndicatorValues(indicator));
@@ -29,11 +29,11 @@ public class CentralTendency {
 			}
 		}
 		
-		System.out.println("Mean value of "+ indicator +" for the world is: " + (worldTotal/(double) countryTracker.size()));
+		System.out.println("Mean value of "+ indicator +" for the world is: " + (worldTotal/(double) 10));//countryTracker.size()));
 		
 		Set<String> keyObjects = regionalTotal.keySet();
 		for(String key:keyObjects){
-			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/(double)regionOccurrence.get(key)));
+			System.out.println("Mean value of "+ indicator +" for the "+ key +" is: " + (regionalTotal.get(key)/ (double) 10 ));//regionOccurrence.get(key)));
 		}
 	}
 	//
@@ -450,5 +450,52 @@ public class CentralTendency {
 		else{
 			System.out.println("Error with finding mode");
 		}
+	}
+
+	public static void weightedMeanOfIndicator(Country[] countrys,String indicator) {
+		
+		int totalWeigth = 0;
+		double [] totalValuesWithWeight = new double[countrys.length*10];
+		for(int indexOfCountry =0; indexOfCountry < 216; indexOfCountry++){
+			double [] values = countrys[indexOfCountry].getIndicatorValues(indicator);
+			for(int indexValue = 0; indexValue < values.length; indexValue++){
+				if(values[indexValue] == 0.0){
+					totalValuesWithWeight[indexValue] = 0.0 * values[indexValue];
+					totalWeigth+=0;
+				}
+				else{//else value is not zero.
+					totalValuesWithWeight[indexValue] = 1.0 * values[indexValue];
+					totalWeigth+=1;
+				}
+			}
+		}
+		double values = countOfValues(totalValuesWithWeight);
+		System.out.println("Weight mean for "+ indicator + " for the world is: " + (values) );
+		
+	}
+
+	public static void weightedMeanOfIndicatorRegion(Country[] countrys, String indicator, String region) {
+		int totalWeigth = 0;
+		double [] totalValuesWithWeight = new double[countrys.length*10];
+		for(int indexOfCountry =0; indexOfCountry < 216; indexOfCountry++){
+			
+			if(countrys[indexOfCountry].isInRegion(region)){
+				double [] values = countrys[indexOfCountry].getIndicatorValues(indicator);
+				for(int indexValue = 0; indexValue < values.length; indexValue++){
+					if(values[indexValue] == 0.0){
+						totalValuesWithWeight[indexValue] = 0.0 * values[indexValue];
+						totalWeigth+=0;
+					}
+					else{//else value is not zero.
+						totalValuesWithWeight[indexValue] = 1.0 * values[indexValue];
+						totalWeigth+=1;
+					}
+					
+				}
+			}
+		}
+		double values = countOfValues(totalValuesWithWeight);
+		System.out.println("Weight mean for "+ indicator + " for the "+region + " is: " + (values/(double)totalWeigth) );
+		
 	}
 }

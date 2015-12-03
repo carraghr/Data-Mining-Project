@@ -74,11 +74,69 @@ public class WorkShop1 {
 				//System.out.println(countrys[countryTracker.indexOf("Ireland")].isInRegion(""));
 				
 				CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population  total");
-				CentralTendency.medianOfIndicatorForWorld(countrys,"Population  total",5000);
-				CentralTendency.medianOfIndicatorForRegion(countrys,"Population  total",5000,"Europe & Central Asia");
-				CentralTendency.modeOfRegion(countrys,"Population  total","Europe & Central Asia");
+				//CentralTendency.medianOfIndicatorForWorld(countrys,"Population  total",5000);
+				//CentralTendency.medianOfIndicatorForRegion(countrys,"Population  total",5000,"Europe & Central Asia");
+				//CentralTendency.modeOfRegion(countrys,"Population  total","Europe & Central Asia");
+				//CentralTendency.weightedMeanOfIndicator(countrys,"Population  total");
+				//CentralTendency.weightedMeanOfIndicatorRegion(countrys,"Population  total","Europe & Central Asia");
 				
 				
+				// CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Agricultural land (sq. km)");
+				// CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Forest area (sq. km)");
+				 
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Access to electricity (% of population)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Electricity production from coal sources (% of total)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Electricity production from natural gas sources (% of total)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Electricity production from oil sources (% of total)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Electricity production from hydroelectric sources (% of total)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Electricity production from nuclear sources (% of total)");
+				 
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "CO2 emissions (kt)");
+				 
+				/* CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Terrestrial protected areas (% of total land area)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Investment in energy with private participation (current US$)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Poverty headcount ratio at $1.25 a day (PPP) (% of population)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population living in areas where elevation is below 5 meters (% of total population)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population growth (annual %)");
+				 CentralTendency.meanOfIndicator(countrys, countryTracker, regionOccurrence, "Population  total");
+				 */
+				 System.out.println();
+				 System.out.println();
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from coal sources (% of total)")));				
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from natural gas sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from oil sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from hydroelectric sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from nuclear sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from nuclear sources (% of total)")));
+				 //System.out.println(CentralTendency.getMedianOfCountryIndicator(indicatorValues)(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("Electricity production from nuclear sources (% of total)")));
+				 
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Ireland")].getIndicatorValues("CO2 emissions (kt)")));
+				
+				 
+				 System.out.println();
+				 System.out.println();
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Italy")].getIndicatorValues("CO2 emissions (kt)")));
+				 /*
+				 
+				 Italy
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Italy")].getIndicatorValues("Electricity production from coal sources (% of total)")));				
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Italy")].getIndicatorValues("Electricity production from natural gas sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Italy")].getIndicatorValues("Electricity production from oil sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Italy")].getIndicatorValues("Electricity production from hydroelectric sources (% of total)")));
+				 System.out.println(CentralTendency.getMean(countrys[countryTracker.indexOf("Italy")].getIndicatorValues("Electricity production from nuclear sources (% of total)")));
+				 
+				 System.out.println();
+				 System.out.println();
+				 System.out.println();
+				 System.out.println();
+				 
+				 CentralTendency.medianOfIndicatorForRegion(countrys, "Access to electricity (% of population)", 20, "Europe & Central Asia");
+				 CentralTendency.medianOfIndicatorForRegion(countrys, "Electricity production from coal sources (% of total)", 20, "Europe & Central Asia");
+				 CentralTendency.medianOfIndicatorForRegion(countrys, "Electricity production from natural gas sources (% of total)", 20, "Europe & Central Asia");
+				 CentralTendency.medianOfIndicatorForRegion(countrys, "Electricity production from oil sources (% of total)", 20, "Europe & Central Asia");
+				 CentralTendency.medianOfIndicatorForRegion(countrys, "Electricity production from hydroelectric sources (% of total)", 20, "Europe & Central Asia");
+				CentralTendency.medianOfIndicatorForRegion(countrys, "Electricity production from nuclear sources (% of total)", 20, "Europe & Central Asia");
+			*/
 			}catch(FileNotFoundException  e){
 				System.out.println("File not found: " + args[0]);
 			}catch(IOException e){

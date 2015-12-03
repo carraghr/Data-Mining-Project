@@ -1,6 +1,5 @@
 
 public class Dispersion {
-
 	
 	public static void getInterquartilRange(double [] values){
 		double [] sortedValues = CentralTendency.sortArrayOfDoubles(values);
