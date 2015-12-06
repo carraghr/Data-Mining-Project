@@ -16,6 +16,10 @@ public class InstanceOfCountry {
 	public float getDistanceFromPoint(InstanceOfCountry pointB){
 		float total = 0;
 		
+		if(!this.region.equals(pointB.region)){
+			total++;
+		}
+		
 		for(int i=0; i < instanceValues.length; i++){
 			float temp = instanceValues[i] - pointB.instanceValues[i];
 			temp = temp * temp;
@@ -27,7 +31,9 @@ public class InstanceOfCountry {
 	
 	public float getDistanceFromPointWithWeight(InstanceOfCountry pointB, float [] weight){
 		float total = 0;
-		
+		if(!this.region.equals(pointB.region)){
+			total++;
+		}
 		for(int i=0; i < instanceValues.length; i++){
 			float temp = instanceValues[i] - pointB.instanceValues[i];
 			temp = weight[i] * (temp * temp);

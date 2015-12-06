@@ -50,12 +50,13 @@ public class NearestNeighbour {
 						occurrence.add(x);
 					}
 				}
-				System.out.println( (line + 1) + ": ");
+				//System.out.print( (line + 1) + ": ");
 				for(String name:occurrence){
-					System.out.print(name+", ");
+					System.out.print(name);
 				}
 				
 				System.out.println();
+				line++;
 			}
 			
 			input.close();
@@ -79,20 +80,26 @@ public class NearestNeighbour {
 			
 			for(int i = 0; i<namesOfTopFive.size(); i++){//place first five on the list as the nearest anything else would skew results.
 				row = input.readLine();
-				float distance = unknownCountry.getDistanceFromPoint(InstanceOfCountry.stringToInstance(row));
-				
-				NearestInstance temp = new NearestInstance(row.substring(0, row.indexOf(",")),distance);
-				
-				namesOfTopFive.addToList(temp,i);
+				if(!row.equals("")){
+					float distance = unknownCountry.getDistanceFromPoint(InstanceOfCountry.stringToInstance(row));
+					float[] weight = new float[]{0.01f,0.1f,0.01f,0.02f,0.01f,0.01f,0.01f,0.01f,0.01f,0.01f,0.05f,0.05f,0.05f,0.01f,0.01f,0.01f,0.01f,0.01f,0.01f,0.01f,0.01f,0.01f,0.1f,0.01f,0.05f,0.05f,0.01f,0.1f,0.05f,0.01f,0.01f,0.01f,0.01f,0.01f,0.01f,0.05f,0.05f,0.01f,0.01f,0.05f};
+					float dis = unknownCountry.getDistanceFromPointWithWeight(InstanceOfCountry.stringToInstance(row), weight );
+					
+					NearestInstance temp = new NearestInstance(row.substring(0, row.indexOf(",")),distance);
+					
+					namesOfTopFive.addToList(temp,i);
+				}
 			}
 			
 			while((row=input.readLine())!=null){
-				row = input.readLine();
-				float distance = unknownCountry.getDistanceFromPoint(InstanceOfCountry.stringToInstance(row));
 				
-				NearestInstance temp = new NearestInstance(row.substring(0, row.indexOf(",")),distance);
+				if(!row.equals("") && !row.equals(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")){
+					float distance = unknownCountry.getDistanceFromPoint(InstanceOfCountry.stringToInstance(row));
 				
-				namesOfTopFive.checkList(temp);
+					NearestInstance temp = new NearestInstance(row.substring(0, row.indexOf(",")),distance);
+				
+					namesOfTopFive.checkList(temp);
+				}
 			}
 			input.close();
 			return namesOfTopFive.names();
